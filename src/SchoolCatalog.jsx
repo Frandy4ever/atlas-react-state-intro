@@ -33,53 +33,56 @@ export default function SchoolCatalog() {
 
   // Filter courses based on search query (insensitive)
   const filteredCourses = courses.filter((course) => {
-    const query = search.toLowerCase();
+    const query = search?.toLowerCase();
     return (
-      course.courseNumber.toLowerCase().includes(query) ||
-      course.name.toLowerCase().includes(query)
+      (course.courseNumber || "").toLowerCase().includes(query) ||
+      (course.name || "").toLowerCase().includes(query)
     );
   });
 
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
+      {/* Search Input  */}
       <input
         type="text"
         placeholder="Search by Course Number or Name"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      {/* Table */}
       <table>
         <thead>
           <tr>
             <th>Trimester</th>
             <th>Course Number</th>
-            <th>Courses Name</th>
+            <th>Course Name</th>
             <th>Semester Credits</th>
             <th>Total Clock Hours</th>
             <th>Enroll</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            // Refrain from indices as key due to the list dynamic nature.
-            <tr key={`${course.trimester}-${course.courseNumber}`}>
-              <td>{course.trimester}</td>
-              <td>{course.courseNumber}</td>
-              <td>{course.name}</td>
-              <td>{course.semesterCredits}</td>
-              <td>{course.totalClockHours}</td>
-              <td>
-                <button>Enroll</button>
-              </td>
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course) => (
+              <tr key={`${course.trimester}-${course.courseNumber}`}>
+                <td>{course.trimester}</td>
+                <td>{course.courseNumber}</td>
+                <td>{course.name}</td>
+                <td>{course.semesterCredits}</td>
+                <td>{course.totalClockHours}</td>
+                <td>
+                  <button>Enroll</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6">No courses found.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-      <div className="pagination">
-        <button>Previous</button>
-        <button>Next</button>
-      </div>
     </div>
   );
 }
