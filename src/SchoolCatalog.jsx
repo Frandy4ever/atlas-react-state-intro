@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
 export default function SchoolCatalog() {
+  // To store and track various data changes.
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Fetch data when the component mounts.
     const fetchCourses = async () => {
       try {
         const response = await fetch("/api/courses.json");
@@ -22,8 +24,9 @@ export default function SchoolCatalog() {
     };
 
     fetchCourses();
-  }, []);
+  }, []); // Ensures the program runs once.
 
+  // Conditional rendering based on loading or error state. 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
