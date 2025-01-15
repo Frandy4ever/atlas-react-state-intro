@@ -184,7 +184,7 @@ export default function SchoolCatalog() {
                   <tr key={`${course.trimester}-${course.courseNumber}`}>
                     <td>{course.trimester}</td>
                     <td>{course.courseNumber}</td>
-                    <td>{course.name}</td>
+                    <td>{course.courseName}</td>
                     <td>{course.semesterCredits}</td>
                     <td>{course.totalClockHours}</td>
                     <td>
