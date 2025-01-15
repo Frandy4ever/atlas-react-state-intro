@@ -5,13 +5,14 @@ export default function SchoolCatalog() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     // Fetch data when the component mounts.
     const fetchCourses = async () => {
       try {
         const response = await fetch("/api/courses.json");
-        if (!response.ok) { 
+        if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
@@ -26,14 +27,28 @@ export default function SchoolCatalog() {
     fetchCourses();
   }, []); // Ensures the program runs once.
 
-  // Conditional rendering based on loading or error state. 
+  // Conditional rendering based on loading or error state.
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  // Filter courses based on search query (insensitive)
+  const filteredCourses = courses.filter((course) => {
+    const query = search.toLowerCase();
+    return (
+      course.courseNumber.toLowerCase().includes(query) ||
+      course.name.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
-      <input type="text" placeholder="Search" />
+      <input
+        type="text"
+        placeholder="Search by Course Number or Name"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <table>
         <thead>
           <tr>
