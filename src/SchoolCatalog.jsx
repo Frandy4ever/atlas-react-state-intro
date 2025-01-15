@@ -6,6 +6,8 @@ export default function SchoolCatalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
 
   useEffect(() => {
     // Fetch data when the component mounts.
@@ -40,6 +42,32 @@ export default function SchoolCatalog() {
     );
   });
 
+  // Sort course based on selected column or direction
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    if (!sortColumn) return 0;
+
+    const aValue = a[sortColumn] || "";
+    const bValue = b[sortColumn] || "";
+
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+    } else {
+      return sortDirection === "asc"
+        ? aValue.toString().localeCompare(bValue.toString())
+        : bValue.toString().localeCompare(aValue.toString());
+    }
+  });
+
+  // Manage sorting when a column header is clicked
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
@@ -52,19 +80,74 @@ export default function SchoolCatalog() {
       />
       {/* Table */}
       <table>
+        {/* Added 'asc' and 'desc' arrows and active class  */}
         <thead>
           <tr>
-            <th>Trimester</th>
-            <th>Course Number</th>
-            <th>Course Name</th>
-            <th>Semester Credits</th>
-            <th>Total Clock Hours</th>
+            <th
+              onClick={() => handleSort("trimester")}
+              className={sortColumn === "trimester" ? "active-column" : ""}
+            >
+              Trimester{" "}
+              {sortColumn === "trimester" && (
+                <span className="sort-arrow">
+                  {sortDirection === "asc" ? "↑" : "↓"}
+                </span>
+              )}
+            </th>
+            <th
+              onClick={() => handleSort("courseNumber")}
+              className={sortColumn === "courseNumber" ? "active-column" : ""}
+            >
+              Course Number{" "}
+              {sortColumn === "courseNumber" && (
+                <span className="sort-arrow">
+                  {sortDirection === "asc" ? "↑" : "↓"}
+                </span>
+              )}
+            </th>
+            <th
+              onClick={() => handleSort("name")}
+              className={sortColumn === "name" ? "active-column" : ""}
+            >
+              Course Name{" "}
+              {sortColumn === "name" && (
+                <span className="sort-arrow">
+                  {sortDirection === "asc" ? "↑" : "↓"}
+                </span>
+              )}
+            </th>
+            <th
+              onClick={() => handleSort("semesterCredits")}
+              className={
+                sortColumn === "semesterCredits" ? "active-column" : ""
+              }
+            >
+              Semester Credits{" "}
+              {sortColumn === "semesterCredits" && (
+                <span className="sort-arrow">
+                  {sortDirection === "asc" ? "↑" : "↓"}
+                </span>
+              )}
+            </th>
+            <th
+              onClick={() => handleSort("totalClockHours")}
+              className={
+                sortColumn === "totalClockHours" ? "active-column" : ""
+              }
+            >
+              Total Clock Hours{" "}
+              {sortColumn === "totalClockHours" && (
+                <span className="sort-arrow">
+                  {sortDirection === "asc" ? "↑" : "↓"}
+                </span>
+              )}
+            </th>
             <th>Enroll</th>
           </tr>
         </thead>
         <tbody>
-          {filteredCourses.length > 0 ? (
-            filteredCourses.map((course) => (
+          {sortedCourses.length > 0 ? (
+            sortedCourses.map((course) => (
               <tr key={`${course.trimester}-${course.courseNumber}`}>
                 <td>{course.trimester}</td>
                 <td>{course.courseNumber}</td>
