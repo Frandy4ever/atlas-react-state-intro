@@ -26,6 +26,11 @@ input {
   margin-bottom: 1em;
 }
 
+/* h2 {
+  font-size: 2rem;
+  font-weight: 700;
+} */
+
 .button {
   appearance: button;
   background: #d00414;
@@ -59,7 +64,7 @@ input {
   padding: 2rem;
 }
 
-table:first-of-type {
+table:first-of-type:not(.no-border-radius) {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -177,4 +182,20 @@ button {
   font-weight: 700;
   width: 100px;
   border-radius: 30px;
+}
+
+.drop-all-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.drop-all-button:hover {
+  background-color: #ff7875;
 }

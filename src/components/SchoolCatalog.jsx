@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
+import { useEnrolledCourses } from "../customs/EnrolledCoursesContext";
 
 export default function SchoolCatalog() {
-  // To store and track various data changes.
+  // State for managing courses and UI behavior
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const rowsPerPage = 5; // Limit rows per page to 5
+  const rowsPerPage = 5; // Number of rows per page
+
+  // Access context functions
+  const { enrollCourse } = useEnrolledCourses();
 
   useEffect(() => {
-    // Fetch data when the component mounts.
+    // Fetch courses data
     const fetchCourses = async () => {
       try {
         const response = await fetch("/api/courses.json");
@@ -30,18 +34,18 @@ export default function SchoolCatalog() {
     };
 
     fetchCourses();
-  }, []); // Ensures the program runs once.
+  }, []);
 
-  // Step 1: Filter courses based on search query (case insensitive)
+  // Filter courses based on the search query
   const filteredCourses = courses.filter((course) => {
     const query = search.toLowerCase();
     return (
       (course.courseNumber || "").toLowerCase().includes(query) ||
-      (course.name || "").toLowerCase().includes(query)
+      (course.courseName || "").toLowerCase().includes(query)
     );
   });
 
-  // Step 2: Sort the filtered courses based on the selected column and direction
+  // Sort the filtered courses
   const sortedCourses = [...filteredCourses].sort((a, b) => {
     if (!sortColumn) return 0;
 
@@ -57,14 +61,14 @@ export default function SchoolCatalog() {
     }
   });
 
-  // Step 3: Apply pagination to the sorted and filtered courses
+  // Paginate the sorted courses
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedCourses = sortedCourses.slice(
     startIndex,
     startIndex + rowsPerPage
   );
 
-  // Manage sorting when a column header is clicked
+  // Handle sorting when a column header is clicked
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -95,12 +99,10 @@ export default function SchoolCatalog() {
   return (
     <div className="school-catalog">
       <h1>School Catalog</h1>
-
       {/* Loading and Error States */}
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
-
-      {/* Only render the table when data is ready */}
+      {/* Render table only when data is ready */}
       {!loading && !error && (
         <>
           {/* Search Input */}
@@ -110,7 +112,8 @@ export default function SchoolCatalog() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {/* Table */}
+
+          {/* Courses Table */}
           <table>
             <thead>
               <tr>
@@ -139,11 +142,11 @@ export default function SchoolCatalog() {
                   )}
                 </th>
                 <th
-                  onClick={() => handleSort("name")}
-                  className={sortColumn === "name" ? "active-column" : ""}
+                  onClick={() => handleSort("courseName")}
+                  className={sortColumn === "courseName" ? "active-column" : ""}
                 >
                   Course Name{" "}
-                  {sortColumn === "name" && (
+                  {sortColumn === "courseName" && (
                     <span className="sort-arrow">
                       {sortDirection === "asc" ? "↑" : "↓"}
                     </span>
@@ -175,7 +178,7 @@ export default function SchoolCatalog() {
                     </span>
                   )}
                 </th>
-                <th>Enroll</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -188,7 +191,9 @@ export default function SchoolCatalog() {
                     <td>{course.semesterCredits}</td>
                     <td>{course.totalClockHours}</td>
                     <td>
-                      <button>Enroll</button>
+                      <button onClick={() => enrollCourse(course)}>
+                        Enroll
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -202,17 +207,14 @@ export default function SchoolCatalog() {
 
           {/* Pagination Buttons */}
           <div className="pagination">
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1} // Disable on the first page
-            >
+            <button onClick={handlePreviousPage} disabled={currentPage === 1}>
               Previous
             </button>
             <button
               onClick={handleNextPage}
               disabled={
                 currentPage === Math.ceil(sortedCourses.length / rowsPerPage)
-              } // Disable on the last page
+              }
             >
               Next
             </button>
