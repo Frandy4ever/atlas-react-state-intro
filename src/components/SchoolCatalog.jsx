@@ -171,6 +171,7 @@ export default function SchoolCatalog() {
                     sortColumn === "totalClockHours" ? "active-column" : ""
                   }
                 >
+                  
                   Total Clock Hours{" "}
                   {sortColumn === "totalClockHours" && (
                     <span className="sort-arrow">

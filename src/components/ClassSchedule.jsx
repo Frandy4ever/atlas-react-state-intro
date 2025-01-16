@@ -1,7 +1,15 @@
 import { useEnrolledCourses } from "../customs/EnrolledCoursesContext";
+import { useState } from "react";
 
 export default function ClassSchedule() {
-  const { enrolledCourses, dropCourse, dropAllCourses } = useEnrolledCourses(); // Access context
+  // Access context
+  const { enrolledCourses, dropCourse, dropAllCourses } = useEnrolledCourses();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleConfirmDropAll = () => {
+    dropAllCourses();
+    setShowModal(false);
+  };
 
   // Determine table class based on enrollment status
   const tableClassName = enrolledCourses.length > 0 ? "no-border-radius" : "";
@@ -9,13 +17,42 @@ export default function ClassSchedule() {
   return (
     <div className="class-schedule">
       <h1>Class Schedule</h1>
-      <h3>Enrolled Courses: {enrolledCourses.length}</h3>
+      <p className="enrollment">Classes Enrolled: {enrolledCourses.length}</p>
 
       {/* Drop All Button below <h3> */}
       {enrolledCourses.length > 0 && (
-        <button className="drop-all-button" onClick={dropAllCourses}>
-          Drop All
-        </button>
+        <>
+          <button
+            className="drop-all-button"
+            onClick={() => setShowModal(true)}
+          >
+            Drop All Courses
+          </button>
+
+          {/* Confirmation Modal */}
+          {showModal && (
+            <div className="modal">
+              <div className="modal-content">
+                <h2>Drop All Courses</h2>
+                <p>
+                  Are you sure you want to drop all courses?
+                  <br /> This action cannot be undone.
+                </p>
+                <div className="pagination">
+                  <button className="drop-all" onClick={handleConfirmDropAll}>
+                    Drop All
+                  </button>
+                  <button
+                    className="cancel-button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Always render the table */}
@@ -24,7 +61,7 @@ export default function ClassSchedule() {
           <tr>
             <th>Course Number</th>
             <th>Course Name</th>
-            <th>Action</th>
+            <th>Drop</th>
           </tr>
         </thead>
         <tbody>

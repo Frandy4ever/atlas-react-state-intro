@@ -11,11 +11,7 @@ export const EnrolledCoursesProvider = ({ children }) => {
 
   // Enroll in a course
   const enrollCourse = (course) => {
-    if (
-      !enrolledCourses.some(
-        (enrolled) => enrolled.courseNumber === course.courseNumber
-      )
-    ) {
+    if (!enrolledCourses.some((enrolled) => enrolled.courseNumber === course.courseNumber)) {
       setEnrolledCourses((prev) => [...prev, course]);
     }
   };
@@ -25,18 +21,18 @@ export const EnrolledCoursesProvider = ({ children }) => {
     setEnrolledCourses((prev) =>
       prev.filter((course) => course.courseNumber !== courseNumber)
     );
-  };
-
-  // Drop all courses
-  const dropAllCourses = () => {
-    setEnrolledCourses([]);
-  };
+   };
+   
+   // Drop all courses 
+   const dropAllCourses = () => {
+      setEnrolledCourses([]);
+   };
 
   // Value provided to the context
   const value = {
     enrolledCourses,
     enrollCourse,
-    dropCourse,
+     dropCourse,
     dropAllCourses,
   };
 

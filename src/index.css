@@ -26,11 +26,6 @@ input {
   margin-bottom: 1em;
 }
 
-/* h2 {
-  font-size: 2rem;
-  font-weight: 700;
-} */
-
 .button {
   appearance: button;
   background: #d00414;
@@ -105,21 +100,6 @@ thead {
   border-right: var(--border);
 }
 
-/* For the added arrow  */
-.sort-arrow {
-  font-size: 1.2rem;
-  font-weight: 800;
-  margin-left: 5px;
-  vertical-align: middle;
-  color: #1ed2af;
-}
-
-/* Update selected column header */
-th.active-column {
-  background-color: #00003c;
-  color: #fef9e6;
-}
-
 table > thead > tr:not(:last-child) > th,
 table > thead > tr:not(:last-child) > td,
 table > tbody > tr:not(:last-child) > th,
@@ -184,12 +164,23 @@ button {
   border-radius: 30px;
 }
 
+/* ******************************** */
+/* ****** Added code ****** */
+/* ******************************** */
+
+/* Update selected column header */
+th.active-column {
+  background-color: #00003c;
+  color: #fef9e6;
+}
 .drop-all-button {
   margin-top: 20px;
   padding: 10px 20px;
   background-color: #ff4d4f;
   color: white;
-  border: none;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: black;
   border-radius: 5px 5px 0 0;
   cursor: pointer;
   font-size: 16px;
@@ -198,4 +189,35 @@ button {
 
 .drop-all-button:hover {
   background-color: #ff7875;
+}
+
+button.drop-all {
+  background-color: #ff4d4f;
+  color: white;
+  cursor: pointer;
+}
+
+button.drop-all:hover {
+  background-color: #ff7875;
+}
+
+button.cancel-button {
+  background-color: #1ed2af;
+}
+
+button.cancel-button:hover,
+button:hover {
+  background-color: #13b998;
+}
+
+button,
+button.drop-all,
+button.cancel-button {
+  transition: background 0.3s ease-in-out;
+}
+
+.sort-arrow {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1ed2af;
 }
